@@ -14,7 +14,7 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-func Migrate(db *gorm.DB) {
-	user := db.AutoMigrate(&User{})
-	fmt.Println(user)
+func UserMigrate(db *gorm.DB) {
+	err := db.AutoMigrate(&User{})
+	fmt.Println(err)
 }
