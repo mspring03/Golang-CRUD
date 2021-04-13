@@ -43,7 +43,7 @@ func (uu *userUsecase) Signup(c *gin.Context) {
 		return
 	}
 
-	uu.ur.CreateUser(user.ID, user.Password, user.Age)
+	uu.ur.CreateUser(reqBody.Id, reqBody.Password, reqBody.Age)
 
 	c.JSON(http.StatusCreated, reqBody)
 }
