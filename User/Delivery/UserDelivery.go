@@ -1,16 +1,15 @@
 package Delivery
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/mspring03/Golang-CRUD/domain"
+)
 
 type userDelivery struct {
-	uu userUsecase
+	uu domain.UserUsecase
 }
 
-type userUsecase interface {
-	Signup(c *gin.Context)
-}
-
-func NewUserDelivery(uu userUsecase) *userDelivery {
+func NewUserDelivery(uu domain.UserUsecase) *userDelivery {
 	return &userDelivery{uu}
 }
 
