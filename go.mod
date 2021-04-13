@@ -1,4 +1,4 @@
-module github.com/mspring03/Golang-CURD
+module github.com/mspring03/Golang-CRUD
 
 go 1.16
 
