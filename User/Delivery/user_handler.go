@@ -6,7 +6,7 @@ import (
 )
 
 type userDelivery struct {
-	uu domain.UserUsecase
+	userUcase domain.UserUsecase
 }
 
 func NewUserDelivery(uu domain.UserUsecase) *userDelivery {
@@ -14,6 +14,6 @@ func NewUserDelivery(uu domain.UserUsecase) *userDelivery {
 }
 
 func (ud *userDelivery) Routing(router *gin.RouterGroup) {
-	router.POST("/signup", ud.uu.Signup)
+	router.POST("/signup", ud.userUcase.Signup)
 }
 
