@@ -6,10 +6,10 @@ import (
 	"gorm.io/gorm"
 	"os"
 
-	"github.com/mspring03/Golang-CRUD/Delivery"
 	"github.com/mspring03/Golang-CRUD/Models"
-	"github.com/mspring03/Golang-CRUD/Repository"
-	"github.com/mspring03/Golang-CRUD/Usecase"
+	"github.com/mspring03/Golang-CRUD/User/Delivery"
+	"github.com/mspring03/Golang-CRUD/User/Repository"
+	"github.com/mspring03/Golang-CRUD/User/Usecase"
 )
 
 func main() {
