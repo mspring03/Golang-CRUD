@@ -5,8 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"github.com/mspring03/Golang-CRUD/Models/User.go"
 	"os"
+
+	"github.com/mspring03/Golang-CURD/Models"
 )
 
 func main() {
@@ -14,6 +15,9 @@ func main() {
 
 	dsn := os.Getenv("DatabaseUrl")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+
+	Models.Migrate(db)
 	fmt.Println(db, err)
 
 	r.Run(":8080")
