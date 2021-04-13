@@ -3,32 +3,21 @@ package Usecase
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/mspring03/Golang-CRUD/Models"
+	"github.com/mspring03/Golang-CRUD/domain"
 	"net/http"
 	"strconv"
 )
 
 type userUsecase struct {
-	ur userRepo
+	ur domain.UserRepo
 }
 
-type userRepo interface {
-	CreateUser(id string, pw string, age uint8)
-	FindOneId(id string) *Models.User
-}
-
-func NewUserUsecase(ur userRepo) *userUsecase {
+func NewUserUsecase(ur domain.UserRepo) *userUsecase {
 	return &userUsecase{ur}
 }
 
-type signupRequestBody struct {
-	Id       string `json:"id"`
-	Password string `json:"password"`
-	Age      uint8  `json:"age"`
-}
-
 func (uu *userUsecase) Signup(c *gin.Context) {
-	reqBody := new(signupRequestBody)
+	reqBody := new(domain.SignupRequestBody)
 	err := c.Bind(reqBody)
 	fmt.Println(*reqBody)
 
