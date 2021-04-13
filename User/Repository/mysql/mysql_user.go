@@ -1,4 +1,4 @@
-package Repository
+package mysql
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 )
 
 type userRepo struct {
-	db *gorm.DB
-	um *Models.User
+	database *gorm.DB
+	userModel *Models.User
 }
 
 func UserRepo (db *gorm.DB, um *Models.User) *userRepo {
@@ -18,11 +18,11 @@ func UserRepo (db *gorm.DB, um *Models.User) *userRepo {
 func (ur *userRepo) CreateUser(id string, pw string, age uint8) {
 	user := Models.User{ID: id, Password: pw, Age: age}
 	fmt.Println(user)
-	ur.db.Create(&user)
+	ur.database.Create(&user)
 }
 
 func (ur *userRepo) FindOneId(id string) *Models.User {
-	ur.db.Where("ID = ?", id).Find(ur.um)
+	ur.database.Where("ID = ?", id).Find(ur.userModel)
 
-	return ur.um
+	return ur.userModel
 }
