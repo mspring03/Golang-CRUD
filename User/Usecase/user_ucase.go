@@ -9,10 +9,10 @@ import (
 )
 
 type userUsecase struct {
-	ur domain.UserRepo
+	userRepo domain.UserRepository
 }
 
-func NewUserUsecase(ur domain.UserRepo) *userUsecase {
+func NewUserUsecase(ur domain.UserRepository) *userUsecase {
 	return &userUsecase{ur}
 }
 
@@ -26,13 +26,13 @@ func (uu *userUsecase) Signup(c *gin.Context) {
 		return
 	}
 
-	user := uu.ur.FindOneId(reqBody.Id)
+	user := uu.userRepo.FindOneId(reqBody.Id)
 	if Collision, _ := strconv.ParseBool(user.ID); Collision == true {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
-	uu.ur.CreateUser(reqBody.Id, reqBody.Password, reqBody.Age)
+	uu.userRepo.CreateUser(reqBody.Id, reqBody.Password, reqBody.Age)
 
 	c.JSON(http.StatusCreated, reqBody)
 }
