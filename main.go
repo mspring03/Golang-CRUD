@@ -6,9 +6,10 @@ import (
 	"gorm.io/gorm"
 	"os"
 
-	"github.com/mspring03/Golang-CURD/Models"
-	"github.com/mspring03/Golang-CURD/Repository"
-	"github.com/mspring03/Golang-CURD/Usecase"
+	"github.com/mspring03/Golang-CRUD/Delivery"
+	"github.com/mspring03/Golang-CRUD/Models"
+	"github.com/mspring03/Golang-CRUD/Repository"
+	"github.com/mspring03/Golang-CRUD/Usecase"
 )
 
 func main() {
@@ -20,16 +21,14 @@ func main() {
 	if err != nil {
 
 	}
+	um := Models.UserMigrate(db)
 
-	Models.UserMigrate(db)
-
-	ur := Repository.UserRepo(db)
-
-	uu := Usecase.NewUserUsecase(r, ur)
-
-
-
-
+	{
+		ur := Repository.UserRepo(db, um)
+		uu := Usecase.NewUserUsecase(ur)
+		ud := Delivery.NewUserDelivery(uu)
+		ud.Routing(r.Group("/user"))
+	}
 
 	_ = r.Run(":8080")
 }
