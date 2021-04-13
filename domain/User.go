@@ -16,7 +16,7 @@ type UserUsecase interface {
 	Signup(c *gin.Context)
 }
 
-type UserRepo interface {
+type UserRepository interface {
 	CreateUser(id string, pw string, age uint8)
 	FindOneId(id string) *Models.User
 }
