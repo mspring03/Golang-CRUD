@@ -42,4 +42,3 @@ func (uu *userUsecase) Signup(c *gin.Context) {
 	resp["token"] = token
 	c.JSON(http.StatusCreated, resp)
 }
-
