@@ -1,11 +1,10 @@
 package Usecase
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/mspring03/Golang-CRUD/domain"
+	"github.com/mspring03/Golang-CRUD/domain/JWT"
 	"net/http"
-	"strconv"
 )
 
 type userUsecase struct {
@@ -17,23 +16,30 @@ func NewUserUsecase(ur domain.UserRepository) *userUsecase {
 }
 
 func (uu *userUsecase) Signup(c *gin.Context) {
+	resp := gin.H{"state": 0, "code": 0, "message": ""}
+
 	reqBody := new(domain.SignupRequestBody)
 	err := c.Bind(reqBody)
-	fmt.Println(*reqBody)
-
 	if err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	user := uu.userRepo.FindOneId(reqBody.Id)
-	if Collision, _ := strconv.ParseBool(user.ID); Collision == true {
-		c.AbortWithStatus(http.StatusInternalServerError)
+	if user.ID != "" {
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	uu.userRepo.CreateUser(reqBody.Id, reqBody.Password, reqBody.Age)
+	token, err := JWT.CreateToken(reqBody.Id)
+	if err != nil {
 
-	c.JSON(http.StatusCreated, reqBody)
+	}
+
+	resp["state"] = http.StatusCreated
+	resp["message"] = "User Account Creation Successful"
+	resp["token"] = token
+	c.JSON(http.StatusCreated, resp)
 }
 
