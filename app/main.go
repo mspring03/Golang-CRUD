@@ -10,12 +10,11 @@ import (
 	"os"
 
 	"github.com/mspring03/Golang-CRUD/User/usecase"
+	_userHttpDeliveryMiddleware "github.com/mspring03/Golang-CRUD/user/delivery/http/middleware"
 )
 
 
 func main() {
-	r := gin.Default()
-
 	dsn := os.Getenv("DatabaseUrl")
 	db, err := sql.Open(`mysql`, dsn)
 
@@ -34,10 +33,13 @@ func main() {
 		}
 	}()
 
+	r := gin.Default()
+	middL := _userHttpDeliveryMiddleware.InitMiddleware()
+	r.Use(middL.SetHeader)
 
 	ur := mysql2.UserRepo(db)
-	uu := usecase.NewUserUsecase(ur)
-	http.NewUserHandler(uu, r.Group("/user"))
+	uu := usecase.NewUserUsecase(ur, middL)
+	http.NewUserHandler(uu, middL, r.Group("/user"))
 
 
 	_ = r.Run(":8080")
