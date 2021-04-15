@@ -16,13 +16,13 @@ import (
 
 func TestSignup(t *testing.T) {
 	//mockUserRepo := new(mocks.UserRepository)
-	mockUser := domain.SignupRequestBody{
+	mockUser := domain.User{
 		Id: "test_id",
 		Password: "test_password",
 		Age: 19,
 	}
 
-	mockListUser := make([]domain.SignupRequestBody, 0)
+	mockListUser := make([]domain.User, 0)
 	mockListUser = append(mockListUser, mockUser)
 
 	t.Run("success", func(t *testing.T) {
