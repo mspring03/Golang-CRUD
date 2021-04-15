@@ -23,3 +23,8 @@ type UserRepository interface {
 	CreateUser(ctx context.Context, user *User) (err error)
 	IdConflictCheck(ctx context.Context, a string) (res *User, err error)
 }
+
+type UserMiddleware interface {
+	CreateToken(userId string) (string, error)
+	VerifyToken(c *gin.Context)
+}
