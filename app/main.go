@@ -3,6 +3,7 @@ package main // import "github.com/mspring03/Golang-CRUD"
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/mspring03/Golang-CRUD/User/delivery"
 	mysql2 "github.com/mspring03/Golang-CRUD/User/repository/mysql"
 	"log"
@@ -16,7 +17,7 @@ func main() {
 	r := gin.Default()
 
 	dsn := os.Getenv("DatabaseUrl")
-	db, err := sql.Open("mysql", dsn)
+	db, err := sql.Open(`mysql`, dsn)
 
 	if err != nil {
 		log.Fatal(err)
