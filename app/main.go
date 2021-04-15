@@ -1,34 +1,43 @@
 package main // import "github.com/mspring03/Golang-CRUD"
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/mspring03/Golang-CRUD/User/Delivery"
-	mysql2 "github.com/mspring03/Golang-CRUD/User/Repository/mysql"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	"github.com/mspring03/Golang-CRUD/User/delivery"
+	mysql2 "github.com/mspring03/Golang-CRUD/User/repository/mysql"
+	"log"
 	"os"
 
-	"github.com/mspring03/Golang-CRUD/Models"
-	"github.com/mspring03/Golang-CRUD/User/Usecase"
+	"github.com/mspring03/Golang-CRUD/User/usecase"
 )
+
 
 func main() {
 	r := gin.Default()
 
 	dsn := os.Getenv("DatabaseUrl")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := sql.Open("mysql", dsn)
 
 	if err != nil {
-
+		log.Fatal(err)
 	}
-	um := Models.UserMigrate(db)
-
-	{
-		ur := mysql2.UserRepo(db, um)
-		uu := Usecase.NewUserUsecase(ur)
-		ud := Delivery.NewUserDelivery(uu)
-		ud.Routing(r.Group("/user"))
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+
+	ur := mysql2.UserRepo(db)
+	uu := usecase.NewUserUsecase(ur)
+	delivery.NewUserHandler(uu, r.Group("/user"))
+
 
 	_ = r.Run(":8080")
 }
