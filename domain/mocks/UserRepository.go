@@ -6,11 +6,11 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type ArticleRepository struct {
+type UserRepository struct {
 	mock.Mock
 }
 
-func (_m *ArticleRepository) Delete(ctx context.Context, id int64) error {
+func (_m *UserRepository) Delete(ctx context.Context, id int64) error {
 	ret := _m.Called(ctx, id)
 
 	var r0 error
