@@ -17,11 +17,13 @@ type User struct {
 
 type UserUsecase interface {
 	Signup(ctx context.Context, a *User) (resp gin.H, err error)
+	Signin(ctx context.Context, a *User) (resp gin.H, err error)
 }
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *User) (err error)
 	IdConflictCheck(ctx context.Context, a string) (res *User, err error)
+	FindUserById(ctx context.Context, Id string) (res *User, err error)
 }
 
 type UserMiddleware interface {
