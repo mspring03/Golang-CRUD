@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/mspring03/Golang-CRUD/domain"
-	"github.com/mspring03/Golang-CRUD/domain/JWT"
+	"github.com/mspring03/Golang-CRUD/user/delivery/http/middleware/JWT"
 	"net/http"
 )
 
