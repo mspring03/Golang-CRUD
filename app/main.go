@@ -38,7 +38,7 @@ func main() {
 	r.Use(middL.SetHeader)
 
 	ur := mysql2.UserRepo(db)
-	uu := usecase.NewUserUsecase(ur, middL)
+	uu := usecase.NewUserUsecase(ur)
 	http.NewUserHandler(uu, middL, r.Group("/user"))
 
 
