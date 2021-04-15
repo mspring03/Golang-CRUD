@@ -4,21 +4,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mspring03/Golang-CRUD/domain"
 	"net/http"
-
-	//"net/http"
 )
 
 type userHandler struct {
 	Uusecase domain.UserUsecase
+	Umiddl domain.UserMiddleware
 }
 
-func NewUserHandler(uu domain.UserUsecase, router *gin.RouterGroup) {
-	handler := &userHandler{uu}
+func NewUserHandler(uu domain.UserUsecase, um domain.UserMiddleware, router *gin.RouterGroup) {
+	handler := &userHandler{uu, um}
 
 	router.POST("/signup", handler.Signup)
 }
 
 func (ud *userHandler) Signup(c *gin.Context) {
+	ctx := c.Request.Context()
+
 	var user domain.User
 	err := c.Bind(&user)
 	if err != nil {
@@ -26,7 +27,6 @@ func (ud *userHandler) Signup(c *gin.Context) {
 		return
 	}
 
-	ctx := c.Request.Context()
 	resp, err := ud.Uusecase.Signup(ctx, &user)
 	if err != nil {
 		c.JSON(resp["state"].(int), resp)
