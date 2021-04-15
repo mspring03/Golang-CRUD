@@ -23,12 +23,14 @@ func (ud *userHandler) Signup(c *gin.Context) {
 	err := c.Bind(&user)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return
 	}
 
 	ctx := c.Request.Context()
 	resp, err := ud.Uusecase.Signup(ctx, &user)
 	if err != nil {
 		c.JSON(resp["state"].(int), resp)
+		return
 	}
 
 	c.JSON(http.StatusCreated, resp)
