@@ -25,19 +25,6 @@ func (m *GoMiddleware) SetHeader(c *gin.Context) {
 	c.Next()
 }
 
-func (m *GoMiddleware) CreateToken(userId string) (string, error) {
-	atClaims := jwt.MapClaims{}
-	atClaims["authorized"] = true
-	atClaims["user_id"] = userId
-	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
-	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
-	if err != nil {
-		return "", err
-	}
-	return token, nil
-}
-
 func (m *GoMiddleware) VerifyToken(c *gin.Context) {
 	tokenString := extractToken(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
