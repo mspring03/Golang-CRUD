@@ -23,7 +23,7 @@ func UserRepo (db *sql.DB) (ur *userRepo) {
 	_, _ = db.Exec(`
 		CREATE TABLE user ( 
 		id VARCHAR(30) PRIMARY KEY,
-		password VARCHAR(30) NOT NULL, 
+		password VARCHAR(100) NOT NULL, 
 		age INT DEFAULT 0, 
 		created_at timestamp not null default current_timestamp,
 		updated_at timestamp not null default current_timestamp on update current_timestamp,
@@ -94,5 +94,23 @@ func (ur *userRepo) IdConflictCheck(ctx context.Context, Id string) (res *domain
 		return res, domain.ErrConflict
 	} else {
 		return &domain.User{}, err
+	}
+}
+
+func (ur *userRepo) FindUserById(ctx context.Context, Id string) (res *domain.User, err error) {
+	query := `SELECT ID, Password, Age, updated_at, created_at FROM user WHERE id = ? ORDER BY created_at`
+
+	user, err := ur.fetch(ctx, query, Id)
+
+	if err != nil {
+		fmt.Println("hello")
+		fmt.Println(err)
+	}
+
+	if len(user) > 0 {
+		res := &user[0]
+		return res, nil
+	} else {
+		return nil, domain.ErrNotFound
 	}
 }
