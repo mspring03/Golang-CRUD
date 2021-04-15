@@ -16,10 +16,10 @@ type User struct {
 
 
 type UserUsecase interface {
-	Signup(c context.Context) (resp gin.H, err error)
+	Signup(ctx context.Context, a *User) (resp gin.H, err error)
 }
 
 type UserRepository interface {
-	CreateUser(id string, pw string, age uint8)
+	CreateUser(ctx context.Context, user *User) (err error)
 	IdConflictCheck(ctx context.Context, a string) (res *User, err error)
 }
