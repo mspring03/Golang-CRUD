@@ -116,9 +116,7 @@ func passwordEncoder(password string) (string, error) {
 }
 
 func passwordCompare(hash, password string) (bool, error) {
-	fmt.Println(1234)
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	fmt.Println(hash, password)
 	if err != nil {
 		switch err {
 		case bcrypt.ErrMismatchedHashAndPassword:
@@ -129,6 +127,5 @@ func passwordCompare(hash, password string) (bool, error) {
 			return false, err
 		}
 	}
-fmt.Println(1234)
 	return true, nil
 }
