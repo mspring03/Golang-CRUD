@@ -1,6 +1,7 @@
-package Usecase
+package usecase
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/mspring03/Golang-CRUD/domain"
 	"github.com/mspring03/Golang-CRUD/domain/JWT"
@@ -15,24 +16,20 @@ func NewUserUsecase(ur domain.UserRepository) *userUsecase {
 	return &userUsecase{ur}
 }
 
-func (uu *userUsecase) Signup(c *gin.Context) {
-	resp := gin.H{"state": 0, "code": 0, "message": ""}
+func (uu *userUsecase) Signup(ctx context.Context, a domain.User) (resp gin.H, err error) {
+	resp = gin.H{"state": 0, "code": 0, "message": ""}
 
-	reqBody := new(domain.SignupRequestBody)
-	err := c.Bind(reqBody)
+	_, err := uu.userRepo.IdConflictCheck(ctx, a.Id)
 	if err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
+		switch err {
+		case domain.ErrNotFound:
+			resp["state"] = http.StatusNotFound
+		}
+
 	}
 
-	user := uu.userRepo.FindOneId(reqBody.Id)
-	if user.ID != "" {
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	uu.userRepo.CreateUser(reqBody.Id, reqBody.Password, reqBody.Age)
-	token, err := JWT.CreateToken(reqBody.Id)
+	uu.userRepo.CreateUser(a.Id, a.Password, a.Age)
+	token, err := JWT.CreateToken(a.Id)
 	if err != nil {
 
 	}
@@ -40,5 +37,5 @@ func (uu *userUsecase) Signup(c *gin.Context) {
 	resp["state"] = http.StatusCreated
 	resp["message"] = "User Account Creation Successful"
 	resp["token"] = token
-	c.JSON(http.StatusCreated, resp)
+	return
 }
