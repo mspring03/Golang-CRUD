@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/mspring03/Golang-CRUD/User/delivery"
 	mysql2 "github.com/mspring03/Golang-CRUD/User/repository/mysql"
+	"github.com/mspring03/Golang-CRUD/user/delivery/http"
 	"log"
 	"os"
 
@@ -37,7 +37,7 @@ func main() {
 
 	ur := mysql2.UserRepo(db)
 	uu := usecase.NewUserUsecase(ur)
-	delivery.NewUserHandler(uu, r.Group("/user"))
+	http.NewUserHandler(uu, r.Group("/user"))
 
 
 	_ = r.Run(":8080")
