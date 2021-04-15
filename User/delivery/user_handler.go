@@ -1,19 +1,36 @@
-package Delivery
+package delivery
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mspring03/Golang-CRUD/domain"
+	"net/http"
+
+	//"net/http"
 )
 
-type userDelivery struct {
-	userUcase domain.UserUsecase
+type userHandler struct {
+	Uusecase domain.UserUsecase
 }
 
-func NewUserDelivery(uu domain.UserUsecase) *userDelivery {
-	return &userDelivery{uu}
+func NewUserHandler(uu domain.UserUsecase, router *gin.RouterGroup) {
+	handler := &userHandler{uu}
+
+	router.POST("/signup", handler.Signup)
 }
 
-func (ud *userDelivery) Routing(router *gin.RouterGroup) {
-	router.POST("/signup", ud.userUcase.Signup)
+func (ud *userHandler) Signup(c *gin.Context) {
+	var user domain.User
+	err := c.Bind(&user)
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	ctx := c.Request.Context()
+	resp, err := ud.Uusecase.Signup(ctx, &user)
+	if err != nil {
+		c.JSON(resp["state"].(int), resp)
+	}
+
+	c.JSON(http.StatusCreated, resp)
 }
 
