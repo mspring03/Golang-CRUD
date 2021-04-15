@@ -25,6 +25,5 @@ type UserRepository interface {
 }
 
 type UserMiddleware interface {
-	CreateToken(userId string) (string, error)
 	VerifyToken(c *gin.Context)
 }
