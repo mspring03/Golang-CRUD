@@ -2,18 +2,20 @@ package usecase
 
 import (
 	"context"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/mspring03/Golang-CRUD/domain"
 	"net/http"
+	"os"
+	"time"
 )
 
 type userUsecase struct {
 	userRepo domain.UserRepository
-	Umiddl domain.UserMiddleware
 }
 
-func NewUserUsecase(ur domain.UserRepository, um domain.UserMiddleware) *userUsecase {
-	return &userUsecase{ur, um}
+func NewUserUsecase(ur domain.UserRepository) *userUsecase {
+	return &userUsecase{ur}
 }
 
 func (uu *userUsecase) Signup(ctx context.Context, a *domain.User) (resp gin.H, err error) {
@@ -31,13 +33,25 @@ func (uu *userUsecase) Signup(ctx context.Context, a *domain.User) (resp gin.H, 
 	}
 
 	uu.userRepo.CreateUser(ctx, a)
-	token, err := uu.Umiddl.CreateToken(a.Id)
 	if err != nil {
 
 	}
 
 	resp["state"] = http.StatusCreated
 	resp["message"] = "User Account Creation Successful"
-	resp["token"] = token
 	return
+}
+
+
+func createToken(userId string) (string, error) {
+	atClaims := jwt.MapClaims{}
+	atClaims["authorized"] = true
+	atClaims["user_id"] = userId
+	atClaims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
+	token, err := at.SignedString([]byte(os.Getenv("ACCESS_SECRET")))
+	if err != nil {
+		return "", err
+	}
+	return token, nil
 }
