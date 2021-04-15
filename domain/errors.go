@@ -11,4 +11,6 @@ var (
 	ErrConflict = errors.New("Your Item already exist")
 	// ErrBadParamInput will throw if the given request-body or params is not valid
 	ErrBadParamInput = errors.New("Given Param is not valid")
+
+	ErrForbidden = errors.New("The client does not have the right to access the content.")
 )
