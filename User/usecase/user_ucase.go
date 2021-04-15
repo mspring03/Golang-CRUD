@@ -4,16 +4,16 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/mspring03/Golang-CRUD/domain"
-	"github.com/mspring03/Golang-CRUD/user/delivery/http/middleware/JWT"
 	"net/http"
 )
 
 type userUsecase struct {
 	userRepo domain.UserRepository
+	Umiddl domain.UserMiddleware
 }
 
-func NewUserUsecase(ur domain.UserRepository) *userUsecase {
-	return &userUsecase{ur}
+func NewUserUsecase(ur domain.UserRepository, um domain.UserMiddleware) *userUsecase {
+	return &userUsecase{ur, um}
 }
 
 func (uu *userUsecase) Signup(ctx context.Context, a *domain.User) (resp gin.H, err error) {
@@ -31,7 +31,7 @@ func (uu *userUsecase) Signup(ctx context.Context, a *domain.User) (resp gin.H, 
 	}
 
 	uu.userRepo.CreateUser(ctx, a)
-	token, err := JWT.CreateToken(a.Id)
+	token, err := uu.Umiddl.CreateToken(a.Id)
 	if err != nil {
 
 	}
