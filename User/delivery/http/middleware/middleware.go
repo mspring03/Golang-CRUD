@@ -14,10 +14,10 @@ type GoMiddleware struct {
 
 }
 
-func (m *GoMiddleware) CORS(next gin.HandlerFunc) gin.HandlerFunc {
+func (m *GoMiddleware) CORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Header("Access-Control-Allow-Origin", "*")
-		next(c)
+		c.Next()
 	}
 }
 
