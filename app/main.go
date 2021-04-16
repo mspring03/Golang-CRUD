@@ -35,7 +35,7 @@ func main() {
 
 	r := gin.Default()
 	middL := _userHttpDeliveryMiddleware.InitMiddleware()
-	r.Use(middL.CORS)
+	r.Use(middL.CORS())
 
 	ur := mysql2.UserRepo(db)
 	uu := usecase.NewUserUsecase(ur)
